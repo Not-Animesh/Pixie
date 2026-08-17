@@ -8,6 +8,13 @@
       "when": 1786966000000,
       "tag": "0000_add_calendar",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786967673538,
+      "tag": "0001_perfect_celestials",
+      "breakpoints": true
     }
   ]
 }
