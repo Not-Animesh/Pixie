@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, type ComponentType } from "react";
+import { useState, type ComponentType, type ReactNode } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ArrowUpRight, Bot, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight,
   Clock3, FileText, FolderKanban, LayoutDashboard, Menu, MoreHorizontal,
@@ -8,25 +10,26 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type NavigationItem = { label: string; icon: ComponentType<{ className?: string }>; color: string; active?: boolean };
+type NavigationItem = { label: string; icon: ComponentType<{ className?: string }>; color: string; href: string };
 
 const navigationGroups: { label: string; items: NavigationItem[] }[] = [
   { label: "Workspace", items: [
-    { label: "Dashboard", icon: LayoutDashboard, color: "text-sky-600", active: true },
-    { label: "AI Assistant", icon: Bot, color: "text-violet-600" },
-    { label: "Calendar", icon: CalendarDays, color: "text-rose-500" },
-    { label: "Task / Kanban", icon: FolderKanban, color: "text-amber-600" },
+    { label: "Dashboard", icon: LayoutDashboard, color: "text-sky-600", href: "/" },
+    { label: "AI Assistant", icon: Bot, color: "text-violet-600", href: "#" },
+    { label: "Calendar", icon: CalendarDays, color: "text-rose-500", href: "/calendar" },
+    { label: "Task / Kanban", icon: FolderKanban, color: "text-amber-600", href: "#" },
   ] },
   { label: "Create", items: [
-    { label: "Notes", icon: StickyNote, color: "text-orange-500" },
-    { label: "Whiteboard", icon: WandSparkles, color: "text-teal-600" },
-    { label: "Pages / Spaces", icon: FileText, color: "text-indigo-600" },
-    { label: "AI Template Builder", icon: Sparkles, color: "text-fuchsia-600" },
+    { label: "Notes", icon: StickyNote, color: "text-orange-500", href: "#" },
+    { label: "Whiteboard", icon: WandSparkles, color: "text-teal-600", href: "#" },
+    { label: "Pages / Spaces", icon: FileText, color: "text-indigo-600", href: "#" },
+    { label: "AI Template Builder", icon: Sparkles, color: "text-fuchsia-600", href: "#" },
   ] },
-  { label: "Preferences", items: [{ label: "Settings", icon: Settings, color: "text-slate-500" }] },
+  { label: "Preferences", items: [{ label: "Settings", icon: Settings, color: "text-slate-500", href: "#" }] },
 ];
 
 function Sidebar({ collapsed, onCollapse, mobile, onClose }: { collapsed: boolean; onCollapse: () => void; mobile?: boolean; onClose?: () => void }) {
+  const pathname = usePathname();
   return (
     <aside className={cn("flex h-full flex-col border-r border-stone-200/80 bg-[#fffdf9] px-3 py-4 shadow-[6px_0_24px_rgba(90,72,50,0.025)]", mobile ? "w-[278px]" : collapsed ? "w-[76px]" : "w-[244px]")}>
       <div className="flex h-9 items-center justify-between px-1">
@@ -44,7 +47,8 @@ function Sidebar({ collapsed, onCollapse, mobile, onClose }: { collapsed: boolea
             <div className="space-y-0.5">
               {group.items.map((item) => {
                 const Icon = item.icon;
-                return <button key={item.label} title={collapsed && !mobile ? item.label : undefined} onClick={onClose} className={cn("group flex h-9 w-full items-center rounded-lg px-2 text-left text-[13px] font-medium transition-colors", item.active ? "bg-violet-50 text-violet-800 shadow-[0_1px_1px_rgba(109,40,217,0.06)]" : "text-stone-600 hover:bg-stone-100 hover:text-stone-900", collapsed && !mobile && "justify-center px-0")}><Icon className={cn("h-[17px] w-[17px] shrink-0", item.color)} /><span className={cn("ml-3 overflow-hidden whitespace-nowrap transition-all duration-200", collapsed && !mobile ? "w-0 opacity-0" : "w-auto opacity-100")}>{item.label}</span></button>;
+                const active = item.href !== "#" && pathname === item.href;
+                return <Link key={item.label} href={item.href} title={collapsed && !mobile ? item.label : undefined} onClick={onClose} className={cn("group flex h-9 w-full items-center rounded-lg px-2 text-left text-[13px] font-medium transition-colors", active ? "bg-violet-50 text-violet-800 shadow-[0_1px_1px_rgba(109,40,217,0.06)]" : "text-stone-600 hover:bg-stone-100 hover:text-stone-900", collapsed && !mobile && "justify-center px-0")}><Icon className={cn("h-[17px] w-[17px] shrink-0", item.color)} /><span className={cn("ml-3 overflow-hidden whitespace-nowrap transition-all duration-200", collapsed && !mobile ? "w-0 opacity-0" : "w-auto opacity-100")}>{item.label}</span></Link>;
               })}
             </div>
           </div>
@@ -62,7 +66,7 @@ function Sidebar({ collapsed, onCollapse, mobile, onClose }: { collapsed: boolea
   );
 }
 
-export function DashboardShell() {
+export function DashboardShell({ children }: { children?: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const tasks = ["Review workspace structure", "Draft weekly goals", "Collect research references"];
@@ -72,6 +76,7 @@ export function DashboardShell() {
     <div className="fixed inset-y-0 left-0 z-30 hidden md:block"><Sidebar collapsed={collapsed} onCollapse={() => setCollapsed((value) => !value)} /></div>
     {mobileOpen && <div className="fixed inset-0 z-50 md:hidden"><button aria-label="Close navigation overlay" onClick={() => setMobileOpen(false)} className="absolute inset-0 bg-stone-900/20" /><div className="relative h-full w-fit shadow-2xl"><Sidebar collapsed={false} onCollapse={() => undefined} mobile onClose={() => setMobileOpen(false)} /></div></div>}
     <main className={cn("min-h-screen transition-[margin] duration-200", collapsed ? "md:ml-[76px]" : "md:ml-[244px]")}>
+      {children ?? <>
       <div className="mx-auto max-w-[1440px] px-5 py-5 sm:px-8 sm:py-7 lg:px-10">
         <header className="mb-8 flex items-center justify-between gap-4"><div className="flex items-center gap-3"><button aria-label="Open navigation" onClick={() => setMobileOpen(true)} className="icon-button md:hidden"><Menu className="h-5 w-5" /></button><div><p className="text-xs font-medium text-stone-400">Monday, August 17</p><h1 className="mt-0.5 text-2xl font-bold tracking-[-0.035em] text-stone-800 sm:text-[28px]">Good morning, Animesh <span aria-hidden="true">✦</span></h1></div></div><button className="inline-flex h-9 items-center gap-2 rounded-lg bg-violet-600 px-3.5 text-xs font-semibold text-white shadow-sm shadow-violet-200 transition hover:bg-violet-700"><Plus className="h-4 w-4" /><span className="hidden sm:inline">Create new</span></button></header>
         <section className="grid gap-4 lg:grid-cols-[1.45fr_0.9fr]">
@@ -83,6 +88,7 @@ export function DashboardShell() {
           <div className="rounded-2xl border border-stone-200 bg-[#fffdf9] p-5 shadow-[0_6px_22px_rgba(77,66,52,0.04)] sm:p-6"><div className="flex items-center justify-between"><div><p className="text-xs font-medium text-stone-400">Recent work</p><h2 className="mt-0.5 text-lg font-bold tracking-[-0.02em]">Pick up where you left off</h2></div><MoreHorizontal className="h-5 w-5 text-stone-400" /></div><div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">{recent.map((item) => <button key={item.title} className="flex items-center gap-3 rounded-xl border border-stone-100 p-3 text-left transition hover:border-violet-100 hover:bg-violet-50/30"><div className={cn("grid h-9 w-9 place-items-center rounded-lg", item.color)}><FileText className="h-4 w-4" /></div><div className="min-w-0"><p className="truncate text-xs font-semibold text-stone-700">{item.title}</p><p className="mt-0.5 text-[10px] text-stone-400">{item.type} · Edited today</p></div></button>)}</div></div>
         </section>
       </div>
+      </>}
     </main>
   </div>;
 }
