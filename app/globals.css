@@ -55,26 +55,26 @@
 }
 
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(240 10% 3.9%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(240 10% 3.9%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(240 10% 3.9%);
-  --primary: hsl(240 5.9% 10%);
-  --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(240 4.8% 95.9%);
-  --secondary-foreground: hsl(240 5.9% 10%);
-  --muted: hsl(240 4.8% 95.9%);
-  --muted-foreground: hsl(240 3.8% 46.1%);
-  --accent: hsl(240 4.8% 95.9%);
-  --accent-foreground: hsl(240 5.9% 10%);
-  --destructive: hsl(0 84.2% 60.2%);
+  --background: hsl(48 25% 96%);
+  --foreground: hsl(24 12% 20%);
+  --card: hsl(42 43% 99%);
+  --card-foreground: hsl(24 12% 20%);
+  --popover: hsl(42 43% 99%);
+  --popover-foreground: hsl(24 12% 20%);
+  --primary: hsl(258 72% 55%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(42 20% 93%);
+  --secondary-foreground: hsl(24 12% 20%);
+  --muted: hsl(42 20% 93%);
+  --muted-foreground: hsl(24 7% 48%);
+  --accent: hsl(266 76% 96%);
+  --accent-foreground: hsl(258 62% 35%);
+  --destructive: hsl(0 75% 58%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(240 5.9% 90%);
-  --input: hsl(240 5.9% 90%);
-  --ring: hsl(240 10% 3.9%);
-  --radius: 0.5rem;
+  --border: hsl(33 18% 88%);
+  --input: hsl(33 18% 88%);
+  --ring: hsl(258 72% 55%);
+  --radius: 0.75rem;
 }
 
 .dark {
@@ -99,35 +99,18 @@
   --ring: hsl(240 4.9% 83.9%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: hsl(240 10% 3.9%);
-    --foreground: hsl(0 0% 98%);
-    --card: hsl(240 10% 3.9%);
-    --card-foreground: hsl(0 0% 98%);
-    --popover: hsl(240 10% 3.9%);
-    --popover-foreground: hsl(0 0% 98%);
-    --primary: hsl(0 0% 98%);
-    --primary-foreground: hsl(240 5.9% 10%);
-    --secondary: hsl(240 3.7% 15.9%);
-    --secondary-foreground: hsl(0 0% 98%);
-    --muted: hsl(240 3.7% 15.9%);
-    --muted-foreground: hsl(240 5% 64.9%);
-    --accent: hsl(240 3.7% 15.9%);
-    --accent-foreground: hsl(0 0% 98%);
-    --destructive: hsl(0 62.8% 30.6%);
-    --destructive-foreground: hsl(0 0% 98%);
-    --border: hsl(240 3.7% 15.9%);
-    --input: hsl(240 3.7% 15.9%);
-    --ring: hsl(240 4.9% 83.9%);
-  }
-}
-
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+}
+
+@layer components {
+  .icon-button {
+    @apply grid h-8 w-8 place-items-center rounded-lg text-stone-500 transition hover:bg-stone-100 hover:text-stone-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300;
   }
 }
